@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cozy Garden Market</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="top-bar">
+      <div class="brand">
+        <canvas id="season-icon-c" width="16" height="16" class="mini-px"></canvas>
+        <div>
+          <h1>COZY GARDEN</h1>
+          <div class="season-line" id="season-line">SPRING 1/8</div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat money">$<span id="money-display">10.00</span></div>
+        <div class="stat day"><span id="day-display">Day 1</span></div>
+        <div class="stat weather" id="weather-label">SUNNY</div>
+        <div class="stat fert">F<span id="fert-display">0</span></div>
+      </div>
+    </header>
+
+    <div class="location-bar">
+      <button type="button" id="btn-back" class="btn pixel hidden">← BACK</button>
+      <button type="button" id="btn-map" class="btn pixel">🗺️ MAP</button>
+      <span class="loc-sep">//</span>
+      <span id="location-name">TOWN</span>
+      <span id="weather-chip" class="weather-chip"></span>
+    </div>
+
+    <main id="main">
+      <section id="view-map" class="view active">
+        <div class="view-header"><h2>TOWN</h2></div>
+        <div class="canvas-frame town-frame">
+          <canvas id="town-canvas" width="240" height="180"></canvas>
+        </div>
+        <div class="map-footer">
+          <div class="climate-card" id="climate-card"></div>
+          <button type="button" id="btn-rest-map" class="btn pixel">😴 SLEEP</button>
+          <button type="button" id="btn-new-game" class="btn pixel">NEW GAME</button>
+        </div>
+        <div class="forecast-panel" id="forecast-panel"></div>
+      </section>
+
+      <section id="view-farm" class="view">
+        <div class="view-header row">
+          <h2>FARM</h2>
+          <div class="header-actions">
+            <button type="button" id="btn-rest" class="btn pixel">😴 SLEEP</button>
+            <button type="button" class="btn pixel" data-goto="storage">📦 STORAGE</button>
+          </div>
+        </div>
+        <div class="seed-tray" id="seed-tray"></div>
+        <div id="farm-notices" class="farm-notices"></div>
+        <div id="planters-area" class="planters-area"></div>
+      </section>
+
+      <section id="view-shop" class="view">
+        <div class="view-header"><h2>SEED STORE</h2></div>
+        <div class="shop-section"><h3>SEEDS</h3><div id="seed-shop" class="card-grid"></div></div>
+        <div class="shop-section"><h3>FERTILIZER</h3><div id="fert-shop" class="card-grid"></div></div>
+        <div class="shop-section"><h3>PLANTERS</h3><div id="planter-shop" class="card-grid"></div></div>
+      </section>
+
+      <!-- Stall setup before market opens -->
+      <section id="view-prep" class="view">
+        <div class="view-header row">
+          <h2>SET UP STALL</h2>
+          <div class="header-actions">
+            <button type="button" id="btn-browse-only" class="btn pixel">DON'T SET UP SHOP</button>
+            <button type="button" id="btn-open-market" class="btn pixel primary">OPEN MARKET</button>
+          </div>
+        </div>
+        <p class="prep-note">Click a storage crate to put it on your stall (or take it off). Click a price sign to change the price. Or skip setup to only buy from others.</p>
+        <div class="prep-cols">
+          <div>
+            <h3 class="px-h3">STORAGE</h3>
+            <div id="prep-storage" class="crate-board"></div>
+          </div>
+          <div>
+            <h3 class="px-h3">ON YOUR STALL</h3>
+            <div id="prep-stall" class="crate-board"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-market" class="view">
+        <div class="view-header row">
+          <h2>MARKET</h2>
+          <button type="button" class="btn pixel" data-goto="prep">EDIT STALL</button>
+        </div>
+        <div class="market-stage-wrap">
+          <div class="canvas-frame market-frame">
+            <canvas id="market-canvas" width="420" height="250"></canvas>
+            <canvas id="stall-umbrella-canvas" class="stall-umbrella-canvas hidden" width="420" height="250"></canvas>
+          </div>
+          <!-- Stall open: umbrella drawn on canvas above; crates in brown box below -->
+          <div id="stall-zoom" class="stall-zoom hidden">
+            <div class="stall-crate-box">
+              <div class="stall-beam-feet" aria-hidden="true">
+                <span class="beam-foot left"></span>
+                <span class="beam-foot right"></span>
+              </div>
+              <div id="crate-row" class="crate-board stall-crates"></div>
+              <div id="product-detail" class="product-detail hidden"></div>
+              <div id="stall-actions" class="stall-actions"></div>
+              <div id="dialogue-dock" class="dialogue-dock hidden">
+                <div id="dialogue-who" class="dialogue-who"></div>
+                <div id="dialogue-text" class="dialogue-text"></div>
+                <div id="dialogue-choices" class="dialogue-choices"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-storage" class="view">
+        <div class="view-header row">
+          <h2>STORAGE</h2>
+          <button type="button" class="btn pixel" data-goto="prep">SET UP STALL</button>
+        </div>
+        <div id="storage-grid" class="crate-board"></div>
+      </section>
+    </main>
+
+    <!-- Center screen notices (no dim for small purchase checks) -->
+    <div id="center-notice" class="center-notice hidden">
+      <div class="center-notice-box" id="center-notice-text"></div>
+    </div>
+
+    <div id="price-pop" class="price-pop hidden">
+      <div class="price-pop-inner">
+        <div class="price-pop-label" id="price-pop-label">PRICE</div>
+        <div class="price-pop-row">
+          <button type="button" class="btn pixel" id="price-pop-down">▼</button>
+          <input type="number" id="price-pop-input" min="0.5" step="0.5" />
+          <button type="button" class="btn pixel" id="price-pop-up">▲</button>
+        </div>
+        <button type="button" class="btn pixel primary" id="price-pop-done">OK</button>
+      </div>
+    </div>
+
+    <div id="toasts"></div>
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div class="modal">
+        <h3 id="modal-title">?</h3>
+        <div id="modal-body"></div>
+        <button type="button" class="btn pixel" id="modal-close">CLOSE</button>
+      </div>
+    </div>
+  </div>
+  <script src="pixels.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
