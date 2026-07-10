@@ -78,7 +78,7 @@
             <button type="button" id="btn-open-market" class="btn pixel primary">OPEN MARKET</button>
           </div>
         </div>
-        <p class="prep-note">Click a storage crate to put it on your stall (or take it off). Click a price sign to change the price. Or skip setup to only buy from others.</p>
+        <p class="prep-note">Click a crate to put all of it on your stall. Click a single item picture to move just that one into another crate. Price signs set the asking price.</p>
         <div class="prep-cols">
           <div>
             <h3 class="px-h3">STORAGE</h3>
@@ -134,6 +134,12 @@
     <div id="center-notice" class="center-notice hidden">
       <div class="center-notice-box" id="center-notice-text"></div>
     </div>
+
+    <!-- Season change celebration particles -->
+    <canvas id="season-fx" class="season-fx hidden" width="800" height="600"></canvas>
+    <div id="season-banner" class="season-banner hidden"></div>
+    <!-- Light ambient weather -->
+    <canvas id="weather-fx" class="weather-fx hidden" width="800" height="600"></canvas>
 
     <div id="price-pop" class="price-pop hidden">
       <div class="price-pop-inner">
